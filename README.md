@@ -30,5 +30,5 @@ The time-related measurements are done by the script itself and can be viewed vi
 The increased database size can be conducted by running the following sql query before and after the script has been executed:
 
 ```sql
-SELECT table_schema "Database", ROUND(SUM(data_length + index_length) / 1024 / 1024,2) "Size [MB]" FROM information_schema.tables WHERE table_schema="test";
+SELECT table_schema "Database", SUM(data_length + index_length) / 1024 "Size [kB]" FROM information_schema.tables WHERE table_schema="test";
 ```

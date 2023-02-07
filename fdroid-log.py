@@ -1,3 +1,11 @@
+"""
+Copyright (c) 2023 Mario Lins <mario.lins@ins.jku.at>
+
+Licensed under the EUPL, Version 1.2. 
+  
+You may obtain a copy of the Licence at: 
+https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+"""
 #!/usr/bin/python3
 
 import json
@@ -8,9 +16,7 @@ import time
 
 FDROID_INDEX="https://f-droid.org/repo/index-v2.json"
 PERSONALITY_API="https://localhost:8071/" # use localhost and ssh tunnel 
-#TREE_ID=4074565107161372948
-#TREE_ID=3393573391536046210
-TREE_ID=2331682371050802309
+TREE_ID=<ENTER_YOUR_TREE_ID>
 VERIFY=False
 
 def prepare_data_directory():
@@ -60,17 +66,26 @@ def request_access_token():
 def create_log_entries(access_token, log_entries):
     print("-----------------------------------------------")
     print("Started to create log entries...")
-    print(datetime.now())
+    print("Started at: " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time())))
     print("-----------------------------------------------")
+    start_time = time.time()
+    start_perf_time = time.perf_counter()
+    start_process_time = time.process_time()
     create_log_url = PERSONALITY_API + "LogBuilder/AddLogEntry"
     tree_id_param = { 'treeId': TREE_ID}
-    t = time.process_time()
     for logentry in log_entries:
         r = requests.post(create_log_url,verify=VERIFY,headers={'Authorization': 'Bearer {}'.format(access_token)},json=json.loads(logentry),params=tree_id_param)
         #print(r.status_code)
-    elapsed_time = time.process_time() - t 
-    print(datetime.now())
-    print("Time elapsed: ",elapsed_time)
+    print("-----------------------------------------------")
+    print("Log entries created...")
+    print("Finished at: " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time())))
+    print("-----------------------------------------------")
+    elapsed_time = time.time() - start_time
+    elapsed_perf_time = time.perf_counter() - start_perf_time
+    elapsed_process_time = time.process_time() - start_process_time 
+    print("Time elapsed: ", elapsed_time)
+    print("Time elapsed (perf): ", elapsed_perf_time)
+    print("Time elapsed (proc): ", elapsed_process_time) 
 
 data_directory = prepare_data_directory()
 fdroid_index_content = load_fdroid_index(data_directory)

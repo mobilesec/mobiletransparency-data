@@ -9,7 +9,8 @@ import time
 FDROID_INDEX="https://f-droid.org/repo/index-v2.json"
 PERSONALITY_API="https://localhost:8071/" # use localhost and ssh tunnel 
 #TREE_ID=4074565107161372948
-TREE_ID=3393573391536046210
+#TREE_ID=3393573391536046210
+TREE_ID=2331682371050802309
 VERIFY=False
 
 def prepare_data_directory():
@@ -59,14 +60,16 @@ def request_access_token():
 def create_log_entries(access_token, log_entries):
     print("-----------------------------------------------")
     print("Started to create log entries...")
+    print(datetime.now())
     print("-----------------------------------------------")
     create_log_url = PERSONALITY_API + "LogBuilder/AddLogEntry"
     tree_id_param = { 'treeId': TREE_ID}
     t = time.process_time()
     for logentry in log_entries:
         r = requests.post(create_log_url,verify=VERIFY,headers={'Authorization': 'Bearer {}'.format(access_token)},json=json.loads(logentry),params=tree_id_param)
-        print(r.status_code)
+        #print(r.status_code)
     elapsed_time = time.process_time() - t 
+    print(datetime.now())
     print("Time elapsed: ",elapsed_time)
 
 data_directory = prepare_data_directory()
